@@ -1,103 +1,198 @@
-import Image from "next/image";
+"use client";
+
+import { useEffect, useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  // 入力値の状態管理
+  const [price, setPrice] = useState<number>(100);
+  const [marginRate, setMarginRate] = useState<number>(0.5);
+  const [baseSalary, setBaseSalary] = useState<number>(35);
+  const [bonus, setBonus] = useState<number>(baseSalary * 4);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  // 計算結果の状態管理
+  const [results, setResults] = useState<{
+    annualSalary: number;
+    averageMonthlySalary: number;
+    monthlyGain: number;
+    saveBonus: number;
+    monthlyNoBonus: number;
+    totalAnnualGain: number;
+  }>({
+    annualSalary: 0,
+    averageMonthlySalary: 0,
+    monthlyGain: 0,
+    saveBonus: 0,
+    monthlyNoBonus: 0,
+    totalAnnualGain: 0,
+  });
+
+  // 計算を実行する関数
+  const calculate = () => {
+    // 年収計算
+    const annualSalary = baseSalary * 10000 * 12 + bonus * 10000;
+    const averageMonthlySalary = annualSalary / 12;
+
+    // 利益計算
+    const monthlyGain = price * 10000 * marginRate;
+    const saveBonus = monthlyGain * 4;
+    const monthlyNoBonus = (monthlyGain * 8) / 12;
+    const totalAnnualGain = monthlyNoBonus * 12 + saveBonus;
+
+    setResults({
+      annualSalary,
+      averageMonthlySalary,
+      monthlyGain,
+      saveBonus,
+      monthlyNoBonus,
+      totalAnnualGain,
+    });
+  };
+
+  useEffect(() => {
+    calculate();
+  }, [price, marginRate, baseSalary, bonus]);
+
+  return (
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
+          シンプルSES収入計算
+        </h1>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* 入力フォーム */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">入力</h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  月額額面
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={baseSalary}
+                    onChange={(e) => setBaseSalary(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  ボーナス
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={bonus}
+                    onChange={(e) => setBonus(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  単価
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  マージン率
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={marginRate}
+                  onChange={(e) => setMarginRate(Number(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* 結果表示 */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800">
+              計算結果
+            </h2>
+            <div className="space-y-4">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">
+                  実際の収入
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">実際の年収:</span>
+                    <span className="font-semibold">
+                      {results.annualSalary.toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">平均月収:</span>
+                    <span className="font-semibold">
+                      {Math.round(
+                        results.averageMonthlySalary
+                      ).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">
+                  理論値の収入
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">月収:</span>
+                    <span className="font-semibold">
+                      {Math.round(results.monthlyGain).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">ボーナス積立:</span>
+                    <span className="font-semibold">
+                      {Math.round(results.saveBonus).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">ボーナス無し月収:</span>
+                    <span className="font-semibold">
+                      {Math.round(results.monthlyNoBonus).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-lg">
+                  <span className="text-gray-800 font-medium">計算年収:</span>
+                  <span className="font-bold text-blue-600">
+                    {Math.round(results.totalAnnualGain).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
   );
 }
