@@ -1,3 +1,9 @@
+# シンプルSES収入計算
+
+超シンプルな計算処理。aws maplify gen2 でdynamodb作って、ログイン機能とランキング機能を実装しよう。
+
+# Next.js
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
