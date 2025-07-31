@@ -7,11 +7,29 @@ specifies that any unauthenticated user can "create", "read", "update",
 and "delete" any "Todo" records.
 =========================================================================*/
 const schema = a.schema({
-  Todo: a
+  SalaryCalculation: a
     .model({
-      content: a.string(),
+      nickname: a.string().required(),
+      unitPrice: a.integer().required(),
+      returnRate: a.float().required(),
+      monthlySalary: a.integer().required(),
+      bonus: a.integer().required(),
+
+      annualSalary: a.integer().required(),
+      netAnnualSalary: a.integer().required(),
+      netMonthlySalary: a.integer().required(),
+
+      calcSalary: a.integer().required(),
+      calcMonthlySalary: a.integer().required(),
+
+      calculatedAt: a.datetime().required(),
+      userId: a.string(),
+      comment: a.string(),
     })
-    .authorization((allow) => [allow.guest()]),
+    .authorization((allow) => [
+      allow.owner(),
+      allow.authenticated().to(["read"]),
+    ]),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -30,7 +48,7 @@ WORK IN THE FRONTEND CODE FILE.)
 
 Using JavaScript or Next.js React Server Components, Middleware, Server 
 Actions or Pages Router? Review how to generate Data clients for those use
-cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
+cases: https:
 =========================================================================*/
 
 /*
@@ -38,7 +56,7 @@ cases: https://docs.amplify.aws/gen2/build-a-backend/data/connect-to-API/
 import { generateClient } from "aws-amplify/data";
 import type { Schema } from "@/amplify/data/resource";
 
-const client = generateClient<Schema>() // use this Data client for CRUDL requests
+const client = generateClient<Schema>() 
 */
 
 /*== STEP 3 ===============================================================
@@ -48,6 +66,3 @@ Fetch records from the database and use them in your frontend component.
 
 /* For example, in a React component, you can use this snippet in your
   function's RETURN statement */
-// const { data: todos } = await client.models.Todo.list()
-
-// return <ul>{todos.map(todo => <li key={todo.id}>{todo.content}</li>)}</ul>
