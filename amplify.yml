@@ -1,0 +1,26 @@
+# https://qiita.com/kiyoshi999/items/b01fe6d9924174724481
+# https://repost.aws/ja/questions/QUjAWHBHqMSiezJH_7IQT2Rg/module-not-found-can-t-resolve-amplify-outputs-json?sc_ichannel=ha&sc_ilang=en&sc_isite=repost&sc_iplace=hp&sc_icontent=QUjAWHBHqMSiezJH_7IQT2Rg&sc_ipos=5
+# https://docs.amplify.aws/react/reference/amplify_outputs/
+# https://docs.aws.amazon.com/amplify/latest/userguide/environment-variables.html
+
+# デフォルトだと作成されないとか、これを追加する必要があるとか、そういった記事が全く見つからない。
+# たぶんテンプレートを使用すれば出てきたのかもしれないが、あれを使うとビルドできないんだよな。
+
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci --cache .npm --prefer-offline
+        - npx ampx pipeline-deploy --branch $AWS_BRANCH --app-id $AWS_APP_ID # ここ追加。
+    build:
+      commands:
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - "**/*"
+  cache:
+    paths:
+      - .next/cache/**/*
+      - .npm/**/*
