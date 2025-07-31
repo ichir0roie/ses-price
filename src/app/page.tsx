@@ -244,251 +244,243 @@ export default function Home() {
   }
 
   return (
-    <Authenticator>
-      {({ signOut, user }) => (
-        <div className="min-h-screen bg-gray-50 py-8">
-          <div className="max-w-4xl mx-auto px-4">
-            <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                シンプルSES収入計算
-              </h1>
-              <div className="flex justify-center">
-                <a
-                  href="https://github.com/ichir0roie/ses-price"
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-700"
-                >
-                  GitHub Repository
-                </a>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="text-center mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            シンプルSES収入計算
+          </h1>
+          <div className="flex justify-center">
+            <a
+              href="https://github.com/ichir0roie/ses-price"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-700"
+            >
+              GitHub Repository
+            </a>
+          </div>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* 入力フォーム */}
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b">
+              入力
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  月額額面
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={baseSalary}
+                    onChange={(e) => setBaseSalary(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div className="border-b pb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-2 ">
+                  ボーナス
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={bonus}
+                    onChange={(e) => setBonus(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  単価
+                </label>
+                <div className="flex items-center">
+                  <input
+                    type="number"
+                    value={price}
+                    onChange={(e) => setPrice(Number(e.target.value))}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <span className="ml-2 text-sm font-medium text-gray-700">
+                    万
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  還元率
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={marginRate}
+                  onChange={(e) => setMarginRate(Number(e.target.value))}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
               </div>
             </div>
+          </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
-              {/* 入力フォーム */}
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b">
-                  入力
-                </h2>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      月額額面
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        value={baseSalary}
-                        onChange={(e) => setBaseSalary(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm font-medium text-gray-700">
-                        万
-                      </span>
-                    </div>
+          {/* 結果表示 */}
+          <div className="bg-white rounded-lg shadow-md p-6 ">
+            <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b">
+              計算結果
+            </h2>
+            <div className="space-y-4">
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">
+                  実際の収入
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">実際の年収</span>
+                    <span className="font-semibold">
+                      {annualSalary().toLocaleString()}円
+                    </span>
                   </div>
-                  <div className="border-b pb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2 ">
-                      ボーナス
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        value={bonus}
-                        onChange={(e) => setBonus(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm font-medium text-gray-700">
-                        万
-                      </span>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">手取り年収</span>
+                    <span className="font-semibold text-green-600">
+                      {Math.round(
+                        getNetAnnualIncome(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
                   </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      単価
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        value={price}
-                        onChange={(e) => setPrice(Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      />
-                      <span className="ml-2 text-sm font-medium text-gray-700">
-                        万
-                      </span>
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      還元率
-                    </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={marginRate}
-                      onChange={(e) => setMarginRate(Number(e.target.value))}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+
+                  <div className="flex justify-between text-xs text-gray-500 mt-2">
+                    <span>年間控除合計</span>
+                    <span>
+                      {Math.round(
+                        getTotalAnnualDeductions(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円/年
+                    </span>
                   </div>
                 </div>
               </div>
 
-              {/* 結果表示 */}
-              <div className="bg-white rounded-lg shadow-md p-6 ">
-                <h2 className="text-xl font-semibold mb-6 text-gray-800 border-b">
-                  計算結果
-                </h2>
-                <div className="space-y-4">
-                  <div className="border-b pb-4">
-                    <h3 className="text-lg font-medium text-gray-800 mb-2">
-                      実際の収入
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">実際の年収</span>
-                        <span className="font-semibold">
-                          {annualSalary().toLocaleString()}円
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">手取り年収</span>
-                        <span className="font-semibold text-green-600">
-                          {Math.round(
-                            getNetAnnualIncome(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between text-xs text-gray-500 mt-2">
-                        <span>年間控除合計</span>
-                        <span>
-                          {Math.round(
-                            getTotalAnnualDeductions(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円/年
-                        </span>
-                      </div>
-                    </div>
+              <div className="border-b pb-4">
+                <div className="space-y-2 text-sm">
+                  <h3 className="text-lg font-medium text-gray-800 mb-2">
+                    月の手取り概算
+                  </h3>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">所得税</span>
+                    <span className="font-semibold text-red-500">
+                      {Math.round(
+                        getMonthlyIncomeTax(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
                   </div>
-
-                  <div className="border-b pb-4">
-                    <div className="space-y-2 text-sm">
-                      <h3 className="text-lg font-medium text-gray-800 mb-2">
-                        月の手取り概算
-                      </h3>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">所得税</span>
-                        <span className="font-semibold text-red-500">
-                          {Math.round(
-                            getMonthlyIncomeTax(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">住民税</span>
-                        <span className="font-semibold text-red-500">
-                          {Math.round(
-                            getMonthlyResidentTax(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">健康保険</span>
-                        <span className="font-semibold text-red-500">
-                          {Math.round(
-                            getMonthlyHealthInsurance(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">厚生年金</span>
-                        <span className="font-semibold text-red-500">
-                          {Math.round(
-                            getMonthlyPensionInsurance(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">雇用保険</span>
-                        <span className="font-semibold text-red-500">
-                          {Math.round(
-                            getMonthlyEmploymentInsurance(
-                              averageMonthlySalary()
-                            )
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                      <div className="flex justify-between border-t pt-2">
-                        <span className="text-gray-800 font-medium">
-                          月額控除合計
-                        </span>
-                        <span className="font-bold text-red-600">
-                          {Math.round(
-                            getTotalMonthlyDeductions(averageMonthlySalary())
-                          ).toLocaleString()}
-                          円
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">手取り</span>
-                      <span className="font-semibold text-green-600">
-                        {Math.round(
-                          getNetMonthlyIncome(averageMonthlySalary())
-                        ).toLocaleString()}
-                        円
-                      </span>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">住民税</span>
+                    <span className="font-semibold text-red-500">
+                      {Math.round(
+                        getMonthlyResidentTax(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
                   </div>
-
-                  <div className="border-b pb-4">
-                    <h3 className="text-lg font-medium text-gray-800 mb-2">
-                      理論値の収入
-                    </h3>
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">月収</span>
-                        <span className="font-semibold">
-                          {Math.round(monthlyGain()).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">ボーナス積立</span>
-                        <span className="font-semibold">
-                          {Math.round(saveBonus()).toLocaleString()}
-                        </span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-gray-600">ボーナス無し月収</span>
-                        <span className="font-semibold">
-                          {Math.round(monthlyNoBonus()).toLocaleString()}
-                        </span>
-                      </div>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">健康保険</span>
+                    <span className="font-semibold text-red-500">
+                      {Math.round(
+                        getMonthlyHealthInsurance(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
                   </div>
-
-                  <div>
-                    <div className="flex justify-between text-lg">
-                      <span className="text-gray-800 font-medium">
-                        計算年収
-                      </span>
-                      <span className="font-bold text-blue-600">
-                        {Math.round(totalAnnualGain()).toLocaleString()}
-                      </span>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">厚生年金</span>
+                    <span className="font-semibold text-red-500">
+                      {Math.round(
+                        getMonthlyPensionInsurance(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
                   </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">雇用保険</span>
+                    <span className="font-semibold text-red-500">
+                      {Math.round(
+                        getMonthlyEmploymentInsurance(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
+                  </div>
+                  <div className="flex justify-between border-t pt-2">
+                    <span className="text-gray-800 font-medium">
+                      月額控除合計
+                    </span>
+                    <span className="font-bold text-red-600">
+                      {Math.round(
+                        getTotalMonthlyDeductions(averageMonthlySalary())
+                      ).toLocaleString()}
+                      円
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex justify-between">
+                  <span className="text-gray-600">手取り</span>
+                  <span className="font-semibold text-green-600">
+                    {Math.round(
+                      getNetMonthlyIncome(averageMonthlySalary())
+                    ).toLocaleString()}
+                    円
+                  </span>
+                </div>
+              </div>
+
+              <div className="border-b pb-4">
+                <h3 className="text-lg font-medium text-gray-800 mb-2">
+                  理論値の収入
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">月収</span>
+                    <span className="font-semibold">
+                      {Math.round(monthlyGain()).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">ボーナス積立</span>
+                    <span className="font-semibold">
+                      {Math.round(saveBonus()).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">ボーナス無し月収</span>
+                    <span className="font-semibold">
+                      {Math.round(monthlyNoBonus()).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <div className="flex justify-between text-lg">
+                  <span className="text-gray-800 font-medium">計算年収</span>
+                  <span className="font-bold text-blue-600">
+                    {Math.round(totalAnnualGain()).toLocaleString()}
+                  </span>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      )}
-    </Authenticator>
+      </div>
+    </div>
   );
 }
