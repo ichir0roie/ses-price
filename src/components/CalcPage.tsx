@@ -47,28 +47,6 @@ export default function CalcPage(props: CalcPageProps) {
     return monthlyNoBonus() * 12 + saveBonus();
   }
 
-  function loginButton() {
-    if (props.login) {
-      return (
-        <button
-          onClick={props.signOut}
-          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
-        >
-          ログアウト
-        </button>
-      );
-    } else {
-      return (
-        <a
-          href="/authed"
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          ログイン
-        </a>
-      );
-    }
-  }
-
   // 税金・保険料計算関数（月額ベース）
   function calculateMonthlyIncomeTax(monthlyIncome: number) {
     // 年収に換算して所得税を計算し、12で割る
@@ -296,6 +274,27 @@ export default function CalcPage(props: CalcPageProps) {
     router.push("/ranking");
   }
 
+  function loginButton() {
+    if (props.login) {
+      return (
+        <button
+          onClick={props.signOut}
+          className="inline-flex items-center gap-2 px-4 py-2 bg-red-600 text-white text-sm rounded-lg ml-4"
+        >
+          ログアウト
+        </button>
+      );
+    } else {
+      return (
+        <a
+          href="/authed"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg ml-4"
+        >
+          ログイン
+        </a>
+      );
+    }
+  }
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w mx-auto px-4">
@@ -306,11 +305,17 @@ export default function CalcPage(props: CalcPageProps) {
           <div className="flex justify-center">
             <a
               href="https://github.com/ichir0roie/ses-price"
-              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg hover:bg-gray-700"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-gray-800 text-white text-sm rounded-lg"
             >
               GitHub Repository
             </a>
-            <div className="gap-2 px-4 py-2 ">{loginButton()}</div>
+            <a
+              className="inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-white text-sm rounded-lg ml-4"
+              href="/ranking"
+            >
+              ランキング
+            </a>
+            {loginButton()}
           </div>
         </div>
 

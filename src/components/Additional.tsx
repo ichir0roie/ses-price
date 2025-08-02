@@ -51,12 +51,6 @@ export default function Additional(props: AdditionalProps) {
           >
             計算結果を登録
           </button>
-          <a
-            className="bg-green-500 text-gray-800 py-3 px-4 rounded-md font-medium hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors flex items-center justify-center"
-            href="/ranking"
-          >
-            ランキング
-          </a>
         </div>
       </div>
     </div>
