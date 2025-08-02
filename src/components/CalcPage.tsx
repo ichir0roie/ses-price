@@ -21,7 +21,7 @@ interface CalcPageProps {
 export default function CalcPage(props: CalcPageProps) {
   // 入力値の状態管理
   const [price, setPrice] = useState<number>(100);
-  const [marginRate, setMarginRate] = useState<number>(0.5);
+  const [returnRate, setMarginRate] = useState<number>(0.5);
   const [baseSalary, setBaseSalary] = useState<number>(35);
   const [bonus, setBonus] = useState<number>(baseSalary * 4);
 
@@ -32,7 +32,7 @@ export default function CalcPage(props: CalcPageProps) {
     return annualSalary() / 12;
   }
   function monthlyGain() {
-    return price * 10000 * marginRate;
+    return price * 10000 * returnRate;
   }
   function saveBonus() {
     return monthlyGain() * 4;
@@ -268,17 +268,16 @@ export default function CalcPage(props: CalcPageProps) {
 
     // データベース保存用のデータ構造をスキーマに合わせて作成
     const salaryData = {
-      nickname: nickname.trim(),
-      unitPrice: Math.round(price * 10000), // 万円を円に変換
-      returnRate: marginRate,
-      monthlySalary: Math.round(baseSalary * 10000), // 万円を円に変換
-      bonus: Math.round(bonus * 10000), // 万円を円に変換
+      unitPrice: price, // 万円を円に変換
+      returnRate: returnRate,
+      monthlySalary: baseSalary,
+      bonus: bonus,
       annualSalary: annualSalary(),
       netAnnualSalary: Math.round(getNetAnnualIncome(averageMonthlySalary())),
-      netMonthlySalary: Math.round(getNetMonthlyIncome(averageMonthlySalary())),
       calcSalary: Math.round(totalAnnualGain()),
-      calcMonthlySalary: Math.round(monthlyNoBonus()),
       calculatedAt: new Date().toISOString(),
+      userId: props.user?.userId,
+      nickname: nickname.trim(),
       comment: comment.trim() || null,
     };
 
@@ -372,7 +371,7 @@ export default function CalcPage(props: CalcPageProps) {
                 <input
                   type="number"
                   step="0.01"
-                  value={marginRate}
+                  value={returnRate}
                   onChange={(e) => setMarginRate(Number(e.target.value))}
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />

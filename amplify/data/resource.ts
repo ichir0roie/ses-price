@@ -9,21 +9,19 @@ and "delete" any "Todo" records.
 const schema = a.schema({
   SalaryCalculation: a
     .model({
-      nickname: a.string().required(),
       unitPrice: a.integer().required(),
       returnRate: a.float().required(),
+
       monthlySalary: a.integer().required(),
       bonus: a.integer().required(),
 
       annualSalary: a.integer().required(),
       netAnnualSalary: a.integer().required(),
-      netMonthlySalary: a.integer().required(),
-
       calcSalary: a.integer().required(),
-      calcMonthlySalary: a.integer().required(),
 
-      calculatedAt: a.datetime().required(),
       userId: a.string(),
+      calculatedAt: a.datetime().required(),
+      nickname: a.string().required(),
       comment: a.string(),
     })
     .authorization((allow) => [
