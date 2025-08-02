@@ -2,6 +2,30 @@
 
 超シンプルな計算処理。aws maplify gen2 でdynamodb作って、ログイン機能とランキング機能を実装しよう。
 
+## ポートフォリオとしての側面
+
+1. Amplify Gen2 を使用した開発
+2. 計10時間程度で作成
+3. AI任せな部分
+   1. 税金の計算手法
+   2. tailwindのクラスネーム
+4. コードのリファクタリングなどは積極的に検討
+   1. 画面遷移
+   2. 認証の有無の制御
+   3. クラスネーム調整
+5. 今回は規模が小ないので、エディタの設定など、開発環境の整理などはやるまでもなかった。
+6. デプロイ時の諸問題への対処などのノウハウ。
+   1. amplifyはたまにうまくデプロイできなくなるが、そういった場合の手動対処。
+      1. s3やpipelineの削除。
+
+## 課題
+
+dynamo db, graph ql を使用してるときの、データのソート方法。
+流石にデータが増えたとき、全件取得してソートなんて…
+
+こまかいボタン配置や、画面遷移の流れには改善の余地があるだろう。
+あとはクラッキング対策。多分他の人のデータも消せちゃう？
+
 # Next.js
 
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
