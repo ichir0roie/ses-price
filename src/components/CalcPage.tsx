@@ -8,6 +8,7 @@ import Additional from "./Additional";
 import { AuthUser } from "aws-amplify/auth";
 import { Amplify } from "aws-amplify";
 import outputs from "../../amplify_outputs.json";
+import { useRouter } from "next/navigation";
 
 Amplify.configure(outputs);
 const client = generateClient<Schema>();
@@ -19,6 +20,8 @@ interface CalcPageProps {
 }
 
 export default function CalcPage(props: CalcPageProps) {
+  const router = useRouter();
+
   // 入力値の状態管理
   const [price, setPrice] = useState<number>(100);
   const [returnRate, setMarginRate] = useState<number>(0.5);
@@ -290,6 +293,7 @@ export default function CalcPage(props: CalcPageProps) {
     if (errors) {
       console.error("保存エラー:", errors);
     }
+    router.push("/ranking");
   }
 
   return (

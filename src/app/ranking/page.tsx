@@ -16,36 +16,35 @@ const client = generateClient<Schema>();
 export default function RankingPage() {
   const router = useRouter();
   const [rankingData, setRankingData] = useState<dataType[]>([]);
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchRankingData() {
-      try {
-        setLoading(true);
-
-        // AWS Amplify DataStoreからデータを取得
-        const { errors, data: salary } =
-          await client.models.SalaryCalculation.list({
-            limit: 100, // 最大100件
-            authMode: "userPool",
-          });
-
-        console.log("取得データ:", salary);
-
-        // // 年収差分で降順ソート
-        // const sortedData = transformedData.sort(
-        //   (a, b) => b.annualDifference - a.annualDifference
-        // );
-
-        setRankingData(salary);
-      } catch (error) {
-        console.error("データ取得エラー:", error);
-        alert("ランキングデータの取得に失敗しました。");
-      } finally {
-        setLoading(false);
-      }
+  const handleDelete = async (id: string) => {
+    const { data: deleted, errors } =
+      await client.models.SalaryCalculation.delete(
+        { id: id },
+        { authMode: "userPool" }
+      );
+    if (errors) {
+      console.error("削除エラー:", errors);
+    } else {
+      console.log("削除成功:", deleted);
     }
+    fetchRankingData();
+  };
 
+  async function fetchRankingData() {
+    // AWS Amplify DataStoreからデータを取得（annualSalaryの大きい順）
+    const { data: salary } = await client.models.SalaryCalculation.list({
+      limit: 100, // 最大100件
+      authMode: "userPool",
+    });
+
+    console.log("取得データ:", salary);
+
+    // annualSalaryの降順でソート dynamo db でソート機能が本当に見つからない。どうやってんの？
+    const sortedSalary = salary.sort((a, b) => b.annualSalary - a.annualSalary);
+    setRankingData(sortedSalary);
+  }
+  useEffect(() => {
     fetchRankingData();
   }, []);
 
@@ -53,29 +52,15 @@ export default function RankingPage() {
     router.push("/authed");
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">ランキングデータを読み込み中...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <Authenticator>
-      {({ signOut, user }) => (
+      {({ user }) => (
         <div className="min-h-screen bg-gray-50 py-8">
           <div className="max-w-6xl mx-auto px-4">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                📊 SES収入ランキング
+                SES収入記録
               </h1>
-              <p className="text-gray-600 mb-6">
-                年収差分（計算年収 - 実際の年収）の高い順に表示しています
-              </p>
               <button
                 onClick={handleBackToCalculator}
                 className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors"
@@ -102,7 +87,7 @@ export default function RankingPage() {
                         計算年収
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        手取り年収
+                        実際の年収
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         年収差分
@@ -112,6 +97,9 @@ export default function RankingPage() {
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         コメント
+                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        操作
                       </th>
                     </tr>
                   </thead>
@@ -163,14 +151,20 @@ export default function RankingPage() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm font-medium text-green-600">
                             {Number.parseInt(
-                              (data.netAnnualSalary / 10000).toString()
+                              (data.annualSalary / 10000).toString()
                             )}
                             万円
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm font-bold text-green-600">
-                            +0円
+                          <div className="text-sm font-bold text-red-600">
+                            {Number.parseInt(
+                              (
+                                (data.calcSalary - data.annualSalary) /
+                                10000
+                              ).toString()
+                            )}
+                            万円
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -185,7 +179,16 @@ export default function RankingPage() {
                             {data.comment || "コメントなし"}
                           </div>
                         </td>
-                        {/* 削除ボタン */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {data.owner === user?.userId && (
+                            <button
+                              onClick={() => handleDelete(data.id)}
+                              className="inline-flex items-center px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                            >
+                              削除
+                            </button>
+                          )}
+                        </td>
                       </tr>
                     ))}
                   </tbody>
