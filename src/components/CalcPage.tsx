@@ -470,23 +470,23 @@ export default function CalcPage(props: CalcPageProps) {
 
               <div className="border-b pb-4">
                 <h3 className="text-lg font-medium text-gray-800 mb-2">
-                  理論値の収入
+                  理論値の額面
                 </h3>
                 <div className="space-y-2">
                   <div className="flex justify-between">
-                    <span className="text-gray-600">月収</span>
+                    <span className="text-gray-600">額面</span>
                     <span className="font-semibold">
                       {Math.round(monthlyGain()).toLocaleString()}円
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">ボーナス積立</span>
+                    <span className="text-gray-600">ボーナス積立(4ヶ月分)</span>
                     <span className="font-semibold">
                       {Math.round(saveBonus()).toLocaleString()}円
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-gray-600">ボーナス無し月収</span>
+                    <span className="text-gray-600">ボーナス無し額面</span>
                     <span className="font-semibold">
                       {Math.round(monthlyNoBonus()).toLocaleString()}円
                     </span>
