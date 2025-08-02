@@ -3,7 +3,7 @@ import router from "next/router";
 import { JSX, useState } from "react";
 
 interface AdditionalProps {
-  handleRegister: CallableFunction;
+  handleRegister: (comment: string, nickname: string) => Promise<void>;
 }
 
 export default function Additional(props: AdditionalProps) {
@@ -11,7 +11,7 @@ export default function Additional(props: AdditionalProps) {
   const [comment, setComment] = useState<string>("");
 
   function handleRegister() {
-    props.handleRegister(nickname, comment);
+    props.handleRegister(comment, nickname);
   }
 
   return (
